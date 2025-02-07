@@ -20,7 +20,7 @@ jobs:
     # Steps that are being run to complete the job
     steps:
       - name: Run hello world
-        run: echo "🎉 Step of the job is running on ${{ runner.os }}!"
+        run: echo "🎉 Step of the job is running on ${{ runner.os }}!!"
   # Job named Build-Job that builds the example applications
   Build-Job:
     runs-on: ubuntu-latest
