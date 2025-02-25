@@ -4,24 +4,25 @@ permissions: read-all
 on:
   workflow_dispatch:
 jobs:
-  example-job:
+  run-composite:
     runs-on: ubuntu-latest
     steps:
-      # Check out the git repository
+      # Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v4
-        # Run template with parameters
-      - name: Run hello world
-        run: echo "🎉 Step of the job is running on ${{ runner.os }}!"
-      - name: Build .NET App
+      # Run the template with parameters
+      - id: dotnet-build
         uses: ./.github/actions/build-dotnet-app
         with:
-          folder-path: "apps/update-app"
-          run-tests: "true"
-          dotnet-version: "8.0"
-          output-directory-path: "${{ github.workspace }}/output"
+          folder-path: "apps/uptodate-app"
+      # Publish output folder as an artifact
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-app
+          path: ${{ steps.dotnet-build.outputs.output-directory-path }}
 
-  # trigger-greeter:
-  #   uses: ./.github/actions/greeter.yml
-  #   with:
-  #     person-name: "${{ github.actor }}"
+  greeter:
+    uses: ./.github/workflows/greeter.yml
+    with:
+      person-name: "${{ github.actor }}"
