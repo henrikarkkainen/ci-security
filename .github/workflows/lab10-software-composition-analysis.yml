@@ -10,17 +10,22 @@ jobs:
       #Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v4
-        #Run the template with parameters
-      - name: Depcheck
+      # Run OWASP Dependency check
+      - name: Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         id: Depcheck
         with:
-          project: "uptodate-app"
-          path: "apps/uptodate-app"
+          project: "ci-security"
+          path: "."
           format: "HTML"
-          output-file: "depcheck-report.html"
-      - name: upload test results
-        uses: actions/upload-artifact@v4
+          out: "reports" # this is the default, no need to specify unless you wish to override it
+          args: >
+            --failOnCVSS 7
+            --enableRetired
+        # Use always() to ensure that even if the above fails on threshold the results are uploaded
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
+        if: ${{ always() }}
         with:
-          name: depcheck-report
-          path: ${{ steps.depcheck.outputs.output-file-path }}
+          name: OWASP Dependency Check report
+          path: ${{github.workspace}}/reports
