@@ -11,9 +11,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         #Run the template with parameters
-      - id: Depcheck
+      - name: Depcheck
         uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
         with:
+          project: "uptodate-app"
           folder-path: "apps/uptodate-app"
           format: "json"
           output-file: "depcheck-report.json"
