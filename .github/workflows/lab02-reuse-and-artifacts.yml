@@ -9,3 +9,13 @@ jobs:
     steps:
       - name: Run hello world
         run: echo "🎉 Step of the job is running on ${{ runner.os }}!"
+      - name: Build .NET App
+        uses: ./.github/actions/build-dotnet-app
+        with:
+          folder-path: "apps/update-app"
+          run-tests: "true"
+          dotnet-version: "8.0"
+          output-directory-path: "${{ github.workspace }}/output"
+
+  trigger-greeter:
+    uses: ./.github/actions/greeter
