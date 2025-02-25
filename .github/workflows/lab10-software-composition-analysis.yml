@@ -4,8 +4,21 @@ permissions: read-all
 on:
   workflow_dispatch:
 jobs:
-  example-job:
+  depchecktest:
     runs-on: ubuntu-latest
     steps:
-      - name: Run hello world
-        run: echo "🎉 Step of the job is running on ${{ runner.os }}!"
+      #Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v4
+        #Run the template with parameters
+      - id: Depcheck
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          folder-path: "apps/uptodate-app"
+          format: "json"
+          output-file: "depcheck-report.json"
+      - name: upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: depcheck-report
+          path: ${{ steps.depcheck.outputs.output-file-path }}
