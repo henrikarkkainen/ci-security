@@ -16,9 +16,9 @@ jobs:
         id: Depcheck
         with:
           project: "uptodate-app"
-          folder-path: "apps/uptodate-app"
-          format: "json"
-          output-file: "depcheck-report.json"
+          path: "apps/uptodate-app"
+          format: "HTML"
+          output-file: "depcheck-report.html"
       - name: upload test results
         uses: actions/upload-artifact@v4
         with:
