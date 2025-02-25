@@ -4,12 +4,25 @@ permissions: read-all
 on:
   workflow_dispatch:
 jobs:
-  depchecktest:
+  Test-Vulnerabilities-With-Dependency-Check:
+    name: OWASP Dependency Check
     runs-on: ubuntu-latest
+    # Steps to actually build the application
     steps:
-      #Checkout the repository to the GitHub Actions runner
+      # Check out the git repository
       - name: Checkout
         uses: actions/checkout@v4
+      # Ensure proper version of .NET
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "8.0.x"
+      # Ensure this to make sure to actually test against real deal
+      - name: Install .NET dependencies
+        run: dotnet restore
+      # Sometimes (even when considered as a bad practice) part of the dependencies are fetched during build, so better to build first
+      - name: Build application
+        run: dotnet build
       # Run OWASP Dependency check
       - name: Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
@@ -22,7 +35,7 @@ jobs:
           args: >
             --failOnCVSS 7
             --enableRetired
-        # Use always() to ensure that even if the above fails on threshold the results are uploaded
+      # Use always() to ensure that even if the above fails on threshold the results are uploaded
       - name: Upload Test results
         uses: actions/upload-artifact@master
         if: ${{ always() }}
