@@ -18,4 +18,4 @@ jobs:
           output-directory-path: "${{ github.workspace }}/output"
 
   trigger-greeter:
-    uses: ./.github/actions/greeter
+    uses: ./.github/actions/greeter:v1
